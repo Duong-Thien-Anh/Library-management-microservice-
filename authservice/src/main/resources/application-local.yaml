@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT} # Use environment variable for server port, default to 8081 if not set
+  port: 8070
   servlet:
     context-path: /api/auth
 
@@ -7,11 +7,11 @@ spring:
   application:
     name: auth-service   # Name used in Eureka and logs
   profiles:
-    active: dev   # Use 'dev' profile for development settings
+    active: local   # Use 'dev' profile for development settings
   datasource:
-    url: ${DB_URL} # Use environment variable with default value
-    username: ${DB_USERNAME}   # Use environment variable
-    password: ${DB_PASSWORD}   # Use environment variable
+    url: jdbc:mysql://localhost:3306/library_auth?createDatabaseIfNotExist=true
+    username: root
+    password: 1902
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -24,8 +24,8 @@ spring:
         format_sql: true
 
 jwt:
-  secret: ${JWT_SECRET}   # Use environment variable for JWT secret}
-  expiration: ${JWT_EXPIRATION}  # 24 hours in milliseconds
+  secret: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
+  expiration: 86400000   # 24 hours in milliseconds
 
 eureka:
   client:
