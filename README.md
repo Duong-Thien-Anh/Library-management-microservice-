@@ -24,14 +24,14 @@ Trước khi chạy hệ thống,  cần cấu hình các thông số sau trong 
 Mỗi service (`Auth`, `Book`, `Borrow`) đều cần kết nối Database:
 
 * `SPRING_DATASOURCE_URL`: `jdbc:mysql://<db_host>:<port>/<db_name>`
-* `SPRING_DATASOURCE_USERNAME`: `<username_cua_babi>`
-* `SPRING_DATASOURCE_PASSWORD`: `<password_cua_babi>`
+* `SPRING_DATASOURCE_USERNAME`: `<username>`
+* `SPRING_DATASOURCE_PASSWORD`: `<password>`
 
 ### 2. Security Configuration (JWT)
 
 Tại **Auth ,Book và Borrow Service **, cần thêm Secret Key để mã hóa Token:
 
-* `JWT_SECRET`: `Gõ_Dãy_Ký_Tự_Bất_Kỳ_Thật_Dài_Vào_Đây_Babi_Nhé`
+* `JWT_SECRET`: `Gõ_Dãy_Ký_Tự_Bất_Kỳ_Thật_Dài_Vào_Đây`
 * `JWT_EXPIRATION`: `86400000` (Ví dụ: 24 giờ tính bằng ms)
 
 ---
