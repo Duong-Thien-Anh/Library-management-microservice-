@@ -18,7 +18,7 @@ services:
     # Environment variables for MySQL
     environment:
       # Root password for MySQL
-      MYSQL_ROOT_PASSWORD: 1902
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # MySQL password (change in production!)
       
       # Create database automatically
       MYSQL_DATABASE: library_books
@@ -67,11 +67,11 @@ services:
       # Database connection
       # Use service name 'mysql-book' as hostname (Docker DNS)
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-book:3306/library_books?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1902
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       
       # JWT configuration 
-      JWT_SECRET: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
+      JWT_SECRET: ${JWT_SECRET_KEY}  #ex: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789 or you can change in production
       JWT_EXPIRATION: 86400000
       
       # Eureka client configuration
