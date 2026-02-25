@@ -95,3 +95,9 @@ docker-compose up -d
 * Nhớ tạo Database tương ứng trong MySQL/PostgreSQL trước khi chạy service.
 
 ---
+Cách check "sức khỏe" của từng container service :
+Lưu ý : phải build docker trước rồi test trên postman
+
+Auth Service : GET http://localhost:8080/api/auth/actuator/health
+Book Service : GET http://localhost:8082/api/books/actuator/health
+Borrow Service : GET http://localhost:8083/api/borrow/actuator/health
