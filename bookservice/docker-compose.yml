@@ -1,0 +1,108 @@
+
+version: '3.8'
+
+services:
+  # ============================================
+  # MYSQL DATABASE SERVICE
+  # ============================================
+  mysql-book:
+    # Use official MySQL 8 image
+    image: mysql:8.0
+    
+    # Container name
+    container_name: mysql-book
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Environment variables for MySQL
+    environment:
+      # Root password for MySQL
+      MYSQL_ROOT_PASSWORD: 1902
+      
+      # Create database automatically
+      MYSQL_DATABASE: library_books
+      
+      # Create user automatically
+      MYSQL_USER: library_user
+      MYSQL_PASSWORD: library_password
+    
+    # Expose MySQL port
+    ports:
+      - "3307:3306"
+    
+    # Persist data even if container is removed
+    volumes:
+      - mysql-book-data:/var/lib/mysql
+    
+    # Health check for MySQL
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1902"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Docker network
+    networks:
+      - microservices-network
+
+  # ============================================
+  # BOOK SERVICE
+  # ============================================
+  book-service:
+    # Build from Dockerfile in current directory
+    build:
+      context: ../bookservice
+      dockerfile: Dockerfile
+    
+    # Container name
+    container_name: book-service
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Environment variables
+    environment:
+      # Database connection
+      # Use service name 'mysql-book' as hostname (Docker DNS)
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-book:3306/library_books?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1902
+      
+      # JWT configuration 
+      JWT_SECRET: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
+      JWT_EXPIRATION: 86400000
+      
+      # Eureka client configuration
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    
+    # Expose Book Service port
+    ports:
+      - "8082:8070"
+    
+    # Wait for MySQL to be healthy before starting
+    depends_on:
+      mysql-book:
+        condition: service_healthy
+    
+    # Docker network
+    networks:
+      - microservices-network
+
+# ============================================
+# VOLUMES
+# ============================================
+# Named volumes for data persistence
+volumes:
+  mysql-book-data:
+
+# ============================================
+# NETWORKS
+# ============================================
+# Custom network for service communication
+networks:
+  microservices-network:
+    driver: bridge
+
+

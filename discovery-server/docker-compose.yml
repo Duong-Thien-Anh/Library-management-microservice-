@@ -1,0 +1,14 @@
+services:
+  eureka-server:
+    build: .
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - microservice-network
+
+networks:
+  microservice-network:
+    name: microservice-network
+    driver: bridge

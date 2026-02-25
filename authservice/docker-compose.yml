@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+
+  # ── MySQL for auth-service ────────────────────────────────────────
+  mysql-auth:
+    image: mysql:8.0
+    container_name: mysql-auth
+    restart: unless-stopped # Restart policy to keep the container running
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: library_auth
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-auth-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1902"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservice-network
+
+  # ── Auth Service ──────────────────────────────────────────────────
+  auth-service:
+    build:
+      context: ../authservice    # Path to your auth-service folder
+      dockerfile: Dockerfile
+    container_name: auth-service
+    depends_on:
+      mysql-auth:
+          condition: service_healthy # Ensure auth-service starts only after MySQL is healthy
+    ports:
+      - "8081:8070"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-auth:3306/library_auth?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET_KEY}
+      JWT_EXPIRATION: 86400000
+
+    networks:
+      - microservice-network
+
+volumes:
+  mysql-auth-data:
+
+networks:
+  microservice-network:
+    external: true

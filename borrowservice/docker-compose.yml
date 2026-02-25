@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+
+  # ── MySQL for borrow-service ──────────────────────────────
+  mysql-borrow:
+    image: mysql:8.0
+    container_name: mysql-borrow
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 1902
+      MYSQL_DATABASE: library_borrow
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql-borrow-data:/var/lib/mysql
+    networks:
+      - microservice-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Borrow Service ────────────────────────────────────────
+  borrowservice:
+    build:
+      context: ../borrowservice    # Path to your borrow-service folder
+      dockerfile: Dockerfile
+    container_name: borrow-service
+    restart: unless-stopped
+
+    depends_on:
+      mysql-borrow:
+            condition: service_healthy # Ensure borrow-service starts only after MySQL is healthy
+
+    ports:
+      - "8083:8070"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-borrow:3306/library_borrow?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1902
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+
+      JWT_SECRET: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
+      JWT_EXPIRATION: 86400000
+    networks:
+      - microservice-network
+
+volumes:
+  mysql-borrow-data:
+
+networks:
+  microservice-network:
+    external: true   # shared network used by all micro-services
+

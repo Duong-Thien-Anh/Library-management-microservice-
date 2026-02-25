@@ -1,0 +1,60 @@
+# SERVER CONFIGURATION
+server:
+  port: 8070 # The port where Book Service will run
+  servlet:
+    context-path: /api/books # Base URL path for all endpoints
+
+# SPRING APPLICATION NAME
+spring:
+  application:
+    name: book-service # Name of this microservice
+  profiles:
+    active: dev # Active profile (dev, prod, etc.)
+  # DATABASE CONFIGURATION
+  datasource:
+    url: jdbc:mysql://localhost:3306/library_books?createDatabaseIfNotExist=true
+    username: root # MySQL username (change in production!)
+    password: 1902 # MySQL password (change in production!)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA/HIBERNATE CONFIGURATION
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true # Print SQL queries in console (for learning)
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true # Format SQL for better readability
+
+# EUREKA CLIENT CONFIGURATION (Service Discovery)
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka server URL
+    enabled: true # Set to true when using Eureka
+  instance:
+    prefer-ip-address: true
+
+# JWT CONFIGURATION
+jwt:
+  secret: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789 # Secret key for JWT (change in production!)
+  expiration: 86400000 # Token expiration time in milliseconds (24 hours)
+
+# LOGGING CONFIGURATION (for debugging)
+logging:
+  level:
+    com.library.bookservice: DEBUG # Show debug logs for our package
+    org.springframework.security: DEBUG # Show security logs
+    org.hibernate.SQL: DEBUG # Show SQL queries
+
+# ACTUATOR ENDPOINTS (for health monitoring)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics # Expose these endpoints
+  endpoint:
+    health:
+      show-details: always # Show detailed health information
+      show-components: always # Show all health components
