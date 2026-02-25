@@ -1,14 +1,9 @@
-# ─────────────────────────────────────────────────────────────
-# STAGE 1: BUILD
-# Use the official Maven image with JDK 21 to compile the code
-# ─────────────────────────────────────────────────────────────
+
 FROM maven:3.9.6-amazoncorretto-21 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy pom.xml first to cache Maven dependencies
-# (If pom.xml hasn't changed, Docker reuses this layer — faster builds)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
@@ -16,11 +11,6 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# ─────────────────────────────────────────────────────────────
-# STAGE 2: RUN
-# Use a minimal JRE image — no Maven, no source code
-# This keeps the final image small (~200MB instead of ~500MB)
-# ─────────────────────────────────────────────────────────────
 FROM amazoncorretto:21-alpine
 
 WORKDIR /app
