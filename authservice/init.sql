@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS library_auth;
 USE library_auth;
 
 INSERT INTO users (email, enabled, password, role, username)
