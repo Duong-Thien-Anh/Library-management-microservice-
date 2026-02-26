@@ -97,28 +97,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * AUTHENTICATION FLOW EXPLANATION:
-     * 
-     * 1. Client sends request with JWT in Authorization header
-     *    Example: Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
-     * 
-     * 2. JwtAuthenticationFilter intercepts request
-     *    - Extracts JWT from header
-     *    - Validates JWT signature
-     *    - Checks expiration
-     *    - Extracts username and roles
-     *    - Creates Authentication object
-     *    - Stores in SecurityContext
-     * 
-     * 3. Request reaches Controller
-     *    - @PreAuthorize checks user's roles
-     *    - If authorized, method executes
-     *    - If not authorized, returns 403 Forbidden
-     * 
-     * 4. Response sent back to client
-     * 
-     * 5. SecurityContext cleared after request
-     *    (stateless - no session stored)
-     */
+    @Bean
+    public org.springframework.security.core.userdetails.UserDetailsService userDetailsService() {
+        return username -> {
+            throw new org.springframework.security.core.userdetails.UsernameNotFoundException("User not found");
+        };
+    }
+
 }

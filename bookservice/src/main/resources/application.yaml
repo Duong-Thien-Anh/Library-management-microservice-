@@ -1,6 +1,6 @@
 # SERVER CONFIGURATION
 server:
-  port: 8070 # The port where Book Service will run
+  port: ${SERVER_PORT}
   servlet:
     context-path: /api/books # Base URL path for all endpoints
 
@@ -9,10 +9,10 @@ spring:
   application:
     name: book-service # Name of this microservice
   profiles:
-    active: dev # Active profile (dev, prod, etc.)
+    active: dev
   # DATABASE CONFIGURATION
   datasource:
-    url: jdbc:mysql://localhost:3306/library_books?createDatabaseIfNotExist=true
+    url: ${DB_URL}
     username: ${DB_USERNAME} # MySQL username (change in production!)
     password: ${DB_PASSWORD} # MySQL password (change in production!)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -38,8 +38,8 @@ eureka:
 
 # JWT CONFIGURATION
 jwt:
-  secret: ${JWT_SECRET_KEY}  # Secret key for JWT (change in production!)
-  expiration: 86400000 # Token expiration time in milliseconds (24 hours)
+  secret: ${JWT_SECRET}  # Secret key for JWT (change in production!)
+  expiration: ${JWT_EXPIRATION} # Token expiration time in milliseconds (24 hours)
 
 # LOGGING CONFIGURATION (for debugging)
 logging:
