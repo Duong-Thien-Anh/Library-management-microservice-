@@ -1,5 +1,6 @@
 package com.fptdemo.borrowservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,10 @@ public class BookDto {
     private Long id;
     private String title;
     private String author;
-    private boolean available;   // true = stock > 0
+
+    @JsonProperty("isAvailable")
+    private boolean isAvailable;   // true = stock > 0
+
+    private Integer availableCopies;
 }
 

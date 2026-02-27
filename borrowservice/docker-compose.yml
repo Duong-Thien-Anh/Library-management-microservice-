@@ -7,7 +7,7 @@ services:
     container_name: mysql-borrow
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 1902
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # MySQL password (change in production!)
       MYSQL_DATABASE: library_borrow
     ports:
       - "3309:3306"
@@ -20,6 +20,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 40s
 
   # ── Borrow Service ────────────────────────────────────────
   borrowservice:
@@ -36,14 +37,16 @@ services:
     ports:
       - "8083:8070"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-borrow:3306/library_borrow?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1902
+      SERVER_PORT: ${SERVER_PORT}
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-borrow:3306/library_borrow
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
 
-      JWT_SECRET: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
-      JWT_EXPIRATION: 86400000
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
     networks:
       - microservice-network
 

@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * REST Controller for borrow operations.
- *
  * Base URL: /api/borrows
  *
  * @AuthenticationPrincipal – Spring Security injects the username
@@ -89,11 +88,6 @@ public class BorrowController {
 
         return ResponseEntity.ok(borrowService.getAllBorrows(authHeader));
     }
-
-//    @GetMapping("/health")
-//    public ResponseEntity<String> healthCheck() {
-//        return ResponseEntity.ok("Borrow Service is running! 📚");
-//    }
 
 }
 

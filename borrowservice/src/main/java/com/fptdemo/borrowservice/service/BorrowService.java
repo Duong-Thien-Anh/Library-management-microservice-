@@ -50,10 +50,10 @@ public class BorrowService {
         }
 
         // 3. Decrease stock in book-service
-        bookClient.decreaseStock(bookId, authHeader);
+        bookClient.updateBookAvailability(bookId, false, authHeader );
 
-        // 4. Save borrow record
-        BorrowRecord record = BorrowRecord.builder()
+        // 4. Save borrow records
+        BorrowRecord records = BorrowRecord.builder()
                 .username(username)
                 .bookId(bookId)
                 .borrowDate(LocalDate.now())
@@ -61,10 +61,10 @@ public class BorrowService {
                 .status(BorrowRecord.BorrowStatus.BORROWED)
                 .build();
 
-        borrowRepo.save(record);
+        borrowRepo.save(records);
 
         log.info("User '{}' borrowed book id={}", username, bookId);
-        return toResponse(record, book.getTitle());
+        return toResponse(records, book.getTitle());
     }
 
     // ---------------------------------------------------------------
@@ -73,30 +73,30 @@ public class BorrowService {
     @Transactional
     public BorrowResponse returnBook(String username, Long borrowRecordId, String authHeader) {
 
-        BorrowRecord record = borrowRepo.findById(borrowRecordId)
-                .orElseThrow(() -> new ResourceNotFoundException("Borrow record not found with id: " + borrowRecordId));
+        BorrowRecord records = borrowRepo.findById(borrowRecordId)
+                .orElseThrow(() -> new ResourceNotFoundException("Borrow records not found with id: " + borrowRecordId));
 
         // Only the owner can return
-        if (!record.getUsername().equals(username)) {
+        if (!records.getUsername().equals(username)) {
             throw new BorrowNotAllowedException("You are not allowed to return a book you did not borrow.");
         }
 
-        if (record.getStatus() == BorrowRecord.BorrowStatus.RETURNED) {
+        if (records.getStatus() == BorrowRecord.BorrowStatus.RETURNED) {
             throw new BorrowNotAllowedException("This book has already been returned.");
         }
 
         // Increase stock in book-service
-        bookClient.increaseStock(record.getBookId(), authHeader);
+        bookClient.updateBookAvailability(records.getBookId(), true, authHeader);
 
-        record.setReturnDate(LocalDate.now());
-        record.setStatus(BorrowRecord.BorrowStatus.RETURNED);
-        borrowRepo.save(record);
+        records.setReturnDate(LocalDate.now());
+        records.setStatus(BorrowRecord.BorrowStatus.RETURNED);
+        borrowRepo.save(records);
 
-        log.info("User '{}' returned borrow record id={}", username, borrowRecordId);
+        log.info("User '{}' returned borrow records id={}", username, borrowRecordId);
 
         // Try to get book title for response (non-critical)
-        String title = fetchBookTitle(record.getBookId(), authHeader);
-        return toResponse(record, title);
+        String title = fetchBookTitle(records.getBookId(), authHeader);
+        return toResponse(records, title);
     }
 
     // ---------------------------------------------------------------
@@ -109,13 +109,13 @@ public class BorrowService {
     }
 
     // ---------------------------------------------------------------
-    // GET single borrow record by ID (admin or owner)
+    // GET single borrow records by ID (admin or owner)
     // ---------------------------------------------------------------
     public BorrowResponse getBorrowById(Long id, String authHeader) {
-        BorrowRecord record = borrowRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Borrow record not found with id: " + id));
-        String title = fetchBookTitle(record.getBookId(), authHeader);
-        return toResponse(record, title);
+        BorrowRecord records = borrowRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Borrow records not found with id: " + id));
+        String title = fetchBookTitle(records.getBookId(), authHeader);
+        return toResponse(records, title);
     }
 
     // ---------------------------------------------------------------
@@ -130,16 +130,16 @@ public class BorrowService {
     // ---------------------------------------------------------------
     // Helper: map entity → response DTO
     // ---------------------------------------------------------------
-    private BorrowResponse toResponse(BorrowRecord record, String bookTitle) {
+    private BorrowResponse toResponse(BorrowRecord records, String bookTitle) {
         return BorrowResponse.builder()
-                .id(record.getId())
-                .username(record.getUsername())
-                .bookId(record.getBookId())
+                .id(records.getId())
+                .username(records.getUsername())
+                .bookId(records.getBookId())
                 .bookTitle(bookTitle)
-                .borrowDate(record.getBorrowDate())
-                .dueDate(record.getDueDate())
-                .returnDate(record.getReturnDate())
-                .status(record.getStatus())
+                .borrowDate(records.getBorrowDate())
+                .dueDate(records.getDueDate())
+                .returnDate(records.getReturnDate())
+                .status(records.getStatus())
                 .build();
     }
 

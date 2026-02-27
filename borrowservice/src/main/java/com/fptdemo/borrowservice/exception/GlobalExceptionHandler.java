@@ -12,7 +12,6 @@ import java.util.Map;
 
 /**
  * Global exception handler – converts exceptions to clean JSON error responses.
- *
  * IMPORTANT: We scope this to "com.fptdemo.borrowservice.controller" so that
  * Spring Actuator endpoints (/actuator/**) are NOT intercepted by the catch-all
  * handleGeneral() method, which would turn actuator's normal responses into 500s.

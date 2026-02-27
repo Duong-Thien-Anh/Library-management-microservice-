@@ -6,10 +6,12 @@ server:
 spring:
   application:
     name: borrow-service
+  profiles:
+      active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/library_borrow?createDatabaseIfNotExist=true
-    username: root
-    password: 1902
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -29,30 +31,26 @@ eureka:
 
 # JWT secret key – must match the same key used in auth-service
 jwt:
-  secret: MySecretKeyForJWTTokenThatShouldBeLongEnoughAndSecure123456789
-  expiration: 86400000
+  secret: ${JWT_SECRET}
+  # noinspection SpringBootApplicationYaml
+  expiration: ${JWT_EXPIRATION}
 
 # Feign client log level
 logging:
   level:
     com.fptdemo.borrowservice: DEBUG
+    com.fptdemo.borrowservice.client.BookClient: DEBUG
     org.springframework.security: DEBUG
 
 management:
   endpoints:
     web:
       # Make actuator accessible at /api/borrow/actuator/** (same context-path as the app)
-      base-path: /actuator
+#      base-path: /actuator
       exposure:
-        include: "*"
+        include: health,info,metrics
   endpoint:
     health:
       show-details: always
       show-components: always
-#  health:
-#    # Disable Eureka health indicator — prevents DOWN/500 when Eureka server is not running
-#    eureka:
-#      enabled: false
-#    # Keep DB health but don't let it crash the whole endpoint
-#    db:
-#      enabled: false
+

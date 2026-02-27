@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 /**
  * Spring Security configuration.
@@ -44,12 +43,10 @@ public class SecurityConfig {
 
         return http.build();
     }
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return web -> web.ignoring()
-//                .requestMatchers("/actuator/**")
-//                .requestMatchers("/api/borrow/actuator/**") // Chặn cả đường dẫn có context-path
-//                .requestMatchers("/error");
-//    }
+
+    @Bean
+    public org.springframework.security.core.userdetails.UserDetailsService userDetailsService() {
+        return new org.springframework.security.provisioning.InMemoryUserDetailsManager();
+    }
 }
 
