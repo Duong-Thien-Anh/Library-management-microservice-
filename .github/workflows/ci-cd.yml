@@ -1,0 +1,31 @@
+name: Build Microservices 
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build Discovery Server
+      run: cd discovery && mvn clean package -DskipTests
+
+    - name: Build Book Service
+      run: cd book && mvn clean package -DskipTests
+
+    - name: Build Borrow Service
+      run: cd borrow && mvn clean package -DskipTests
+
+    - name: Build Auth Service
+      run: cd auth && mvn clean package -DskipTests
