@@ -209,7 +209,7 @@ public class BookController {
      * 
      * Searches books by title, author, or category
      * 
-     * @param searchTerm - Search term from query parameter
+     * @param  term - Search term from query parameter
      * @return List of matching books
      * 
      * @RequestParam: Extracts query parameter from URL
@@ -313,11 +313,5 @@ public class BookController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * HEALTH CHECK ENDPOINT
-     */
-    // @GetMapping("/health")
-    // public ResponseEntity<String> healthCheck() {
-    //     return ResponseEntity.ok("Book Service is running! 📚");
-    // }
+
 }
