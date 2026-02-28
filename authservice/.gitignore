@@ -37,9 +37,8 @@ build/
 
 # File cấu hình chứa thông tin nhạy cảm
 **/src/main/resources/application-local.yaml
-**/src/main/resources/application-dev.yaml
+
 
 # Các file khác của IDE và hệ thống
 .idea/
-target/
 *.class
