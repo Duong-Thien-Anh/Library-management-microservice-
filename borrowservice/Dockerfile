@@ -18,7 +18,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy the fat JAR from the build stage
-COPY --from=builder /app/target/borrowservice-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8083
 
