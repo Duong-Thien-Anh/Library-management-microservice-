@@ -3,6 +3,15 @@ spring:
     name: discovery-server
   profiles:
     active: dev
+
+
+
+info:
+  app:
+    name: Discovery Server
+    version: 1.0.0
+    description: Eureka Service Registry
+
 server:
   port: 8761
 
@@ -10,3 +19,12 @@ eureka:
     client:
         register-with-eureka: false
         fetch-registry: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics  # expose the endpoints you need
+  endpoint:
+    health:
+      show-details: always  # shows full health details (UP/DOWN per component)
