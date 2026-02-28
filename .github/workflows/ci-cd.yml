@@ -28,6 +28,7 @@ jobs:
         run: |
           cd discovery-server
           mvn clean package -DskipTests
+          ls -R target/
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/discovery-server:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/discovery-server:latest
 
