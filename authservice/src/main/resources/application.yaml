@@ -32,8 +32,12 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
     enabled: true   # Set to true when you have a running Eureka server
+    registry-fetch-interval-seconds: 60
+    eureka-service-url-poll-interval-seconds: 30
   instance:
     prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
 
 logging:
   level:
