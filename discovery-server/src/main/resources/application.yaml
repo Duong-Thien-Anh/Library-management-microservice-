@@ -19,7 +19,8 @@ eureka:
     client:
         register-with-eureka: false
         fetch-registry: false
-
+    server:
+      eviction-interval-timer-in-ms: 30000
 management:
   endpoints:
     web:
