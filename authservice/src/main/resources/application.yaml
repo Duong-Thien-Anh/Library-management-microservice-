@@ -7,7 +7,10 @@ spring:
   application:
     name: auth-service   # Name used in Eureka and logs
   profiles:
-    active: dev   # Use 'production' profile for production settings
+    active: local # Use 'production' profile for production settings
+  sql:
+    init:
+        mode: always   # Always initialize the database (useful for development and testing)
   datasource:
     url: ${DB_URL} # Use environment variable with default value
     username: ${DB_USERNAME}   # Use environment variable
