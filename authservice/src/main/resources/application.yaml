@@ -6,8 +6,8 @@ server:
 spring:
   application:
     name: auth-service   # Name used in Eureka and logs
-  profiles:
-    active: local # Use 'production' profile for production settings
+#  profiles:
+#    active: local # Use 'production' profile for production settings
   sql:
     init:
         mode: always   # Always initialize the database (useful for development and testing)
