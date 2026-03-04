@@ -11,8 +11,7 @@ spring:
   sql:
     init:
         mode: always   # Always initialize the database (useful for development and testing)
-    platform :
-        mysql   # Specify the database platform for SQL initialization
+        platform : mysql   # Specify the database platform for SQL initialization
   datasource:
     url: ${DB_URL} # Use environment variable with default value
     username: ${DB_USERNAME}   # Use environment variable
