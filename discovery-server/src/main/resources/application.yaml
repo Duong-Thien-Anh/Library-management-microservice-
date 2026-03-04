@@ -1,28 +1,23 @@
 spring:
   application:
     name: discovery-server
-  profiles:
-    active: production
-
-
-
-info:
-  app:
-    name: Discovery Server
-    version: 1.0.0
-    description: Eureka Service Registry
 
 server:
   port: 8761
 
 eureka:
+    instance :
+        hostname: discovery-server
     client:
         register-with-eureka: false
         fetch-registry: false
+        service-url:
+          defaultZone: http://discovery-server:8761/eureka/
     server:
       enable-self-preservation: false # Disable self-preservation mode to allow eviction of unhealthy instances
       peer-node-read-timeout-ms: 5000
-      eviction-interval-timer-in-ms: 60000
+      eviction-interval-timer-in-ms: 30000
+      response-cache-update-interval-ms: 10000
 management:
   endpoints:
     web:
