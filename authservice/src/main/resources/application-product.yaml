@@ -6,12 +6,10 @@ server:
 spring:
   application:
     name: auth-service   # Name used in Eureka and logs
-  profiles:
-    active: product # Use 'production' profile for production settings
   sql:
     init:
-        mode: always   # Always initialize the database (useful for development and testing)
-        platform : mysql   # Specify the database platform for SQL initialization
+      mode: always   # Always initialize the database (useful for development and testing)
+      platform : mysql   # Specify the database platform for SQL initialization
   datasource:
     url: ${DB_URL} # Use environment variable with default value
     username: ${DB_USERNAME}   # Use environment variable
