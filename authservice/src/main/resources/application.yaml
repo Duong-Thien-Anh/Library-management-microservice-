@@ -48,6 +48,7 @@ logging:
   level:
     com.library.authservice: DEBUG
     org.springframework.security: DEBUG
+    org.springframework.jdbc.datasource.init: DEBUG
 
 management:
   endpoints:
