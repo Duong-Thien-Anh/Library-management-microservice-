@@ -8,8 +8,8 @@ server:
 spring:
   application:
     name: book-service # Name of this microservice
-  profiles:
-    active: dev
+#  profiles:
+#    active:
   # DATABASE CONFIGURATION
   datasource:
     url: ${DB_URL}
@@ -33,9 +33,12 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/} # Eureka server URL
     enabled: true # Set to true when using Eureka
+    registry-fetch-interval-seconds: 60
+    eureka-service-url-poll-interval-seconds: 30
   instance:
     prefer-ip-address: true
-
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
 # JWT CONFIGURATION
 jwt:
   secret: ${JWT_SECRET}  # Secret key for JWT (change in production!)
